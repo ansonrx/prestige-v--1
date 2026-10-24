@@ -217,11 +217,17 @@
 
               {%- capture param_name -%}swatch-{{ quick_buy_context }}-{{ section.id }}-{{ block.id }}-{{ product.id }}-{{ matched_product_option.position }}{%- endcapture -%}
 
-              {%- liquid
-                for option_value in matched_product_option.values
-                  render 'option-value', type: 'swatch', option_value: option_value, param_name: param_name, option_position: matched_product_option.position, output_variant_media: true, size: 'sm'
-                endfor
-              -%}
+{%- liquid
+  for option_value in matched_product_option.values
+    assign variant_thumbnail = option_value.variant.featured_image
+
+    if variant_thumbnail != blank
+      render 'option-value', type: 'thumbnail', option_value: option_value, image: variant_thumbnail, param_name: param_name, option_position: matched_product_option.position, output_variant_media: true, size: 'sm'
+    else
+      render 'option-value', type: 'swatch', option_value: option_value, param_name: param_name, option_position: matched_product_option.position, output_variant_media: true, size: 'sm'
+    endif
+  endfor
+-%}
             </fieldset>
         {%- endcase -%}
       {%- endif -%}
